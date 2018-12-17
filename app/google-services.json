@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "44539388564",
+    "firebase_url": "https://mealorder-b274e.firebaseio.com",
+    "project_id": "mealorder-b274e",
+    "storage_bucket": "mealorder-b274e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:44539388564:android:3feea4d4276fa3c0",
+        "android_client_info": {
+          "package_name": "com.example.shoxrux.mealorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "44539388564-vaesd90vqfuo29da40kjjm3bosp6b1gd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shoxrux.mealorder",
+            "certificate_hash": "d9c4333f4dbb80a4aa1305f38d03c51acf90137a"
+          }
+        },
+        {
+          "client_id": "44539388564-0cnodrkudntjhnp4kn1ll0uho6h5r0t6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWh4K24kCRzfDF14i4frxQqyqWeyrqu9Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "44539388564-0cnodrkudntjhnp4kn1ll0uho6h5r0t6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
