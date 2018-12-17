@@ -1,6 +1,7 @@
 package com.example.shoxrux.mealorder;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth myAuth;
-
+    private ProgressDialog progressDialog;
 
     private EditText email;
     private EditText password;
@@ -32,10 +33,17 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.login_email);
         password = findViewById(R.id.login_password);
         myAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(this);
 
     }
-    public void goToLogin(View view) {
+    public void goToLogin(View view)
+    {
         if (emailValidation(email) & passwordValidation(password)) {
+            //Process dialog with input Registration
+            progressDialog.setMessage("Registration ...");
+            progressDialog.setCancelable(false);
+            //activate it (starts to show the dialog)
+            progressDialog.show();
             myAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                     .addOnCompleteListener( this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -43,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Intent returnIntent = new Intent();
                                 setResult(Activity.RESULT_OK,returnIntent);
+                                //hiding the process dialog
+                                progressDialog.dismiss();
                                 finish();
                             } else {
                                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

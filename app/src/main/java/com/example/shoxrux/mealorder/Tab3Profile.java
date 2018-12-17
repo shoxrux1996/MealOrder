@@ -60,7 +60,7 @@ public class Tab3Profile extends Fragment {
         public void onDataChange(DataSnapshot dataSnapshot) {
             client = dataSnapshot.getValue(Client.class);
             client.setKey(dataSnapshot.getKey());
-            Log.e("shoxError",client.getEmail());
+
             Ion.with(getContext()).load(client.getImage()).withBitmap()
                     .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
             textView.setText(client.getFirstName()+" "+client.getLastName());

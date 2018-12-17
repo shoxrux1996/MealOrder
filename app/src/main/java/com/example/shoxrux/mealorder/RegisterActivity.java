@@ -9,12 +9,15 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -107,9 +110,9 @@ public class RegisterActivity extends AppCompatActivity {
     public void register(View view) {
 
         final FirebaseAuth myAuth = FirebaseAuth.getInstance();
-
         //Process dialog with input Registration
         progressDialog.setMessage("Registration ...");
+        progressDialog.setCancelable(false);
         //activate it (starts to show the dialog)
         progressDialog.show();
 
@@ -119,42 +122,68 @@ public class RegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     final FirebaseUser currentUser = myAuth.getCurrentUser();
-
                     //If photo of the user picked up successfully
                     if (selectedImage != null) {
-
                         //Creating storage path reference using uid and image path
                         final StorageReference filepath = storageReference.child("images/users/"+currentUser.getUid()).child(selectedImage.getLastPathSegment());
 
                         //Upload photo file to Firebase Storage
-                        filepath.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                //storing new user to database with image
-                                writeNewUser(""+currentUser.getUid(), ""+currentUser.getEmail(),""+
-                                        ""+firstName.getText().toString(), ""+lastName.getText().toString(), ""+filepath.getDownloadUrl());
+                        UploadTask uploadTask = filepath.putFile(selectedImage);
 
+                        // Register observers to listen for when the download is done or if it fails
+                        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                            @Override
+                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+                                // Continue with the task to get the download URL
+                                return filepath.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    Uri downloadUri = task.getResult();
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    Log.e("shoxURL", "Success");
+                                    writeNewUser(""+currentUser.getUid(), ""+currentUser.getEmail(),""+
+                                            ""+firstName.getText().toString(), ""+lastName.getText().toString(), ""+downloadUri.toString());
+
+                                } else {
+                                    // Handle unsuccessful (Failed) upload
+                                    Log.e("shoxURL", task.getException().getMessage());
+                                    //storing new user to database
+                                    writeNewUser(""+currentUser.getUid(), ""+currentUser.getEmail(),
+                                            firstName.getText().toString(), lastName.getText().toString());
+                                }
+                                //hiding the process dialog
+                                progressDialog.dismiss();
+                                //If creating user finished ok, we will finish this activity with success result
+                                Intent returnIntent = new Intent();
+                                setResult(Activity.RESULT_OK,returnIntent);
+                                finish();
                             }
                         });
-
-                      }else {
+                    }else {
+                        Log.e("shoxURL", "image Null");
                         //storing new user to database
                         writeNewUser(""+currentUser.getUid(), ""+currentUser.getEmail(),
                                 firstName.getText().toString(), lastName.getText().toString());
-                    }
-                    //hiding the process dialog
-                    progressDialog.dismiss();
 
-                    //If creating user finished ok, we will finish this activity with success result
-                    Intent returnIntent = new Intent();
-                    setResult(Activity.RESULT_OK,returnIntent);
-                    finish();
+                        //hiding the process dialog
+                        progressDialog.dismiss();
+                        //If creating user finished ok, we will finish this activity with success result
+                        Intent returnIntent = new Intent();
+                        setResult(Activity.RESULT_OK,returnIntent);
+                        finish();
+                    }
+
                 }else {
                     //hiding the process dialog
                     progressDialog.dismiss();
                     // If sign in fails, display a message to the user.
                     Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
