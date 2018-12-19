@@ -1,6 +1,8 @@
 package com.example.shoxrux.mealorder;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private static int LOGIN_SUCCEED = 111;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -111,6 +115,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(getIntent());
             }
         }
+        if(requestCode == FavoriteRecyclerViewAdapter.MENU_ORDER){
+            if(resultCode == Activity.RESULT_OK){
+                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+                dialog.setTitle("Successfully ordered!");
+                dialog.setMessage("Your order was received, it will be confirmed soon. Please be in touch");
+                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+            }
+        }
+
     }
 
     @Override
@@ -179,7 +200,5 @@ public class MainActivity extends AppCompatActivity {
             // Show 3 total pages.
             return 3;
         }
-
-
     }
 }

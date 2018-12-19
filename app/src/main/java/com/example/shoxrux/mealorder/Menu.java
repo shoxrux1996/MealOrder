@@ -1,21 +1,25 @@
 package com.example.shoxrux.mealorder;
 
+import java.io.Serializable;
+
 /**
  * Created by shoxrux on 12/14/18.
  */
 
-public class Menu {
+public class Menu implements Serializable {
     private String imageURL;
     private String title;
     private String description;
+    private String ingredients;
     private Double price;
     private String key;
 
-    public Menu(String imageURL, String title, String description, Double price) {
+    public Menu(String imageURL, String title, String description, String ingredients ,Double price) {
         this.imageURL = imageURL;
         this.title = title;
         this.description = description;
         this.price = price;
+        this.ingredients = ingredients;
     }
     public Menu(){
 
@@ -54,6 +58,14 @@ public class Menu {
 
     public Double getPrice() {
         return price;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(String ingredients) {
+        this.ingredients = ingredients;
     }
 
     public void setPrice(Double price) {

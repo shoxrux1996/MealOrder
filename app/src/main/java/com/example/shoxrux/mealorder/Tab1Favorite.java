@@ -18,27 +18,17 @@ import java.util.List;
  */
 
 public class Tab1Favorite extends Fragment {
-    private RecyclerView mRecyclerView;
-    private FavoriteRecyclerViewAdapter mAdapter;
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab1favorite, container, false);
-
-
-        mRecyclerView = rootView.findViewById(R.id.favorite_recycle_view);
-
+        RecyclerView mRecyclerView = rootView.findViewById(R.id.favorite_recycle_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-
-
-        mAdapter = new FavoriteRecyclerViewAdapter(rootView.getContext());
+        FavoriteRecyclerViewAdapter mAdapter = new FavoriteRecyclerViewAdapter(rootView.getContext());
         mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
 
     }
-
 
 
 }

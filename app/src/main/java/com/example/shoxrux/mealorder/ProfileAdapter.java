@@ -47,7 +47,6 @@ public class ProfileAdapter extends ArrayAdapter {
         holder.imageView = convertView.findViewById(R.id.profile_item_icon);
         holder.textView = convertView.findViewById(R.id.profile_item_text);
         holder.setData(icon, text);
-
         return convertView;
 
     }

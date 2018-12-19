@@ -2,12 +2,16 @@ package com.example.shoxrux.mealorder;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,17 +121,27 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     @Override
     public void onBindViewHolder(final MenuItemViewHolder holder,final int position) {
         holder.populate(menus.get(position));
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void OnClick(View view, int position) {
+                Intent menuInfo = new Intent(context, MenuInfoActivity.class);
+                menuInfo.putExtra("menuInfo", menus.get(position));
+                context.startActivity(menuInfo);
+
+            }
+        });
+
         holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Menu menu = menus.get(position);
                 if(holder.checkKeyExists(menu.getKey())){
                     databaseReference.child("users").child(uID).child("favorites").child(menu.getKey()).removeValue();
-                    holder.favoriteImageView.setImageResource(R.drawable.favorite);
+                    holder.favoriteImageView.setButtonDrawable(R.drawable.favorite);
 
                 }else{
                     databaseReference.child("users").child(uID).child("favorites").child(menu.getKey()).setValue(menu);
-                    holder.favoriteImageView.setImageResource(R.drawable.favorite_blue);
+                    holder.favoriteImageView.setButtonDrawable(R.drawable.favorite_blue);
                 }
             }
         });
@@ -138,7 +152,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         return menus.size();
     }
 
-    class MenuItemViewHolder extends RecyclerView.ViewHolder {
+    class MenuItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.menu_rounded_image)
         RoundedImage imageView;
         @BindView(R.id.menu_title)
@@ -146,11 +160,19 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         @BindView(R.id.menu_price)
         TextView priceView;
         @BindView(R.id.menu_favorite_image)
-        ImageView favoriteImageView;
+        RadioButton favoriteImageView;
+
+        private ItemClickListener itemClickListener;
+
         public MenuItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+            itemView.setOnClickListener(this);
+
+        }
+        public void setItemClickListener(ItemClickListener itemClickListener){
+            this.itemClickListener = itemClickListener;
         }
 
         void populate(Menu menu){
@@ -160,7 +182,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
             titleView.setText(menu.getTitle());
             priceView.setText(menu.getPrice()+" sum");
             if(checkKeyExists(menu.getKey()))
-                favoriteImageView.setImageResource(R.drawable.favorite_blue);
+                favoriteImageView.setButtonDrawable(R.drawable.favorite_blue);
 
         }
         public boolean checkKeyExists(String menuKey){
@@ -172,6 +194,9 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
             return false;
         }
 
-
+        @Override
+        public void onClick(View view) {
+            itemClickListener.OnClick(view, getAdapterPosition());
+        }
     }
 }

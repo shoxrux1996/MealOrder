@@ -2,13 +2,13 @@ package com.example.shoxrux.mealorder;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRecyclerViewAdapter.FavoriteItemViewHolder> {
     private List<Favorite> favorites;
     private Context context;
-
+    public static int MENU_ORDER;
 
     public FavoriteRecyclerViewAdapter(Context context) {
         this.favorites = new ArrayList<>();
@@ -47,6 +47,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     }
 
     class FavoritesChildEventListener implements ChildEventListener{
+        
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             Favorite favorite = dataSnapshot.getValue(Favorite.class);
@@ -89,9 +90,20 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     }
 
     @Override
-    public void onBindViewHolder(FavoriteItemViewHolder holder, int position) {
+    public void onBindViewHolder(FavoriteItemViewHolder holder, final int position) {
         holder.populate(favorites.get(position));
+        holder.orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent orderIntent = new Intent(context, MakeOrderActivity.class);
+                Menu menu = Favorite.castToMenu(favorites.get(position));
+                orderIntent.putExtra("menuInfo", menu);
+                MainActivity mainActivity = (MainActivity) context;
+                mainActivity.startActivityForResult(orderIntent, MENU_ORDER);
+            }
+        });
     }
+
 
     @Override
     public int getItemCount() {
@@ -103,7 +115,10 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
         RoundedImage imageView;
         @BindView(R.id.favorite_title_price)
         TextView titleView;
-
+        @BindView(R.id.favorite_description)
+        TextView descriptionView;
+        @BindView(R.id.favorite_image_button)
+        FloatingActionButton orderButton;
         public FavoriteItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -114,6 +129,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
             Ion.with(context).load(favorite.getImageURL()).withBitmap()
                     .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
             titleView.setText(favorite.getTitle()+" - "+ favorite.getPrice()+"$");
+            descriptionView.setText(favorite.getDescription());
 
         }
     }

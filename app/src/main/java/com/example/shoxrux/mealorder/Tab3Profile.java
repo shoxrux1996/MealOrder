@@ -1,12 +1,14 @@
 package com.example.shoxrux.mealorder;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,13 +40,29 @@ public class Tab3Profile extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.tab3profile, container, false);
+        final View rootView = inflater.inflate(R.layout.tab3profile, container, false);
 
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         List<String> userInfos = Arrays.asList("+998908082443",currentUser.getEmail(),"www.inha.uz","Order List");
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(currentUser.getUid()).addValueEventListener(new UserInfoEventListener());
+        //Get current user info to Object and complete user interface with user information
+        databaseReference.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                client = dataSnapshot.getValue(Client.class);
+                client.setKey(dataSnapshot.getKey());
+
+                Ion.with(rootView.getContext()).load(client.getImage()).withBitmap()
+                        .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
+                textView.setText(client.getFirstName()+" "+client.getLastName());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         ListView listView = rootView.findViewById(R.id.profile_list_view);
         ProfileAdapter adapter = new ProfileAdapter(rootView.getContext(), userInfos);
@@ -52,23 +70,15 @@ public class Tab3Profile extends Fragment {
         textView = rootView.findViewById(R.id.profile_name);
 
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i == 3){
+                    Intent orderList = new Intent(rootView.getContext(), OrderListActivity.class);
+                    startActivity(orderList);
+                }
+            }
+        });
         return rootView;
-    }
-    class UserInfoEventListener implements ValueEventListener{
-
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            client = dataSnapshot.getValue(Client.class);
-            client.setKey(dataSnapshot.getKey());
-
-            Ion.with(getContext()).load(client.getImage()).withBitmap()
-                    .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
-            textView.setText(client.getFirstName()+" "+client.getLastName());
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
     }
 }

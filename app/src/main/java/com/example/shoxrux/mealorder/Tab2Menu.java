@@ -16,19 +16,18 @@ import java.util.List;
  */
 
 public class Tab2Menu extends Fragment {
-    private RecyclerView mRecyclerView;
-    private MenuRecyclerViewAdapter mAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab2menu, container, false);
-        mRecyclerView = rootView.findViewById(R.id.menu_recycle_view);
+
+
+        RecyclerView mRecyclerView = rootView.findViewById(R.id.menu_recycle_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(rootView.getContext(), 2));
-
-        mAdapter = new MenuRecyclerViewAdapter(rootView.getContext());
+        MenuRecyclerViewAdapter mAdapter = new MenuRecyclerViewAdapter(rootView.getContext());
         mRecyclerView.setAdapter(mAdapter);
-
         return rootView;
     }
 }

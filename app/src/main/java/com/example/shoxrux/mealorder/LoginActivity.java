@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     {
         if (emailValidation(email) & passwordValidation(password)) {
             //Process dialog with input Registration
-            progressDialog.setMessage("Registration ...");
+            progressDialog.setMessage("Log In ...");
             progressDialog.setCancelable(false);
             //activate it (starts to show the dialog)
             progressDialog.show();
