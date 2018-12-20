@@ -55,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 finish();
                             } else {
+                                //hiding the process dialog
+                                progressDialog.dismiss();
                                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }

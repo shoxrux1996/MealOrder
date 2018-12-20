@@ -88,7 +88,6 @@ public class RegisterActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 progressDialog.setMessage("Uploading image...");
                 progressDialog.show();
-                Toast.makeText(this, "" + requestCode + resultCode, Toast.LENGTH_SHORT).show();
                 selectedImage = data.getData();
                 try {
                     final InputStream inputStream = getContentResolver().openInputStream(selectedImage);

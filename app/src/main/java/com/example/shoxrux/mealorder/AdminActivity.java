@@ -22,13 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-public class MainActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -44,104 +40,101 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
-    private static int LOGIN_SUCCEED = 111;
-    private static int ADMIN_PAGE = 212;
-
+    public static int MENU_CHANGED = 231;
+    public static int MENU_CREATE = 109;
+    public static int ORDER_REQUEST_CODE= 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_admin);
 
-//        Check user logged or not, if not go to login page
-        checkUserSigned();
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
-//        databaseReference.child("users").child(mAuth.getCurrentUser().getUid()).child("favorites").push().setValue(favorite);
-
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = findViewById(R.id.container);
+        mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.favorite);
+        tabLayout.getTabAt(0).setIcon(R.drawable.user);
         tabLayout.getTabAt(1).setIcon(R.drawable.menu);
-        tabLayout.getTabAt(2).setIcon(R.drawable.user);
+        tabLayout.getTabAt(2).setIcon(R.drawable.list_white);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-
-    }
-
-
-    //Check user logged or not, if not go to login page
-    private void checkUserSigned() {
-        mAuth = FirebaseAuth.getInstance();
-        // Check if user is signed in
-        currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            //start Login Activity
-            Intent loginIntent = new Intent(this, LoginActivity.class);
-            startActivityForResult(loginIntent, LOGIN_SUCCEED);
-        }else{
-            if(currentUser.getEmail().equals("admin@admin.com")){
-                //start Login Activity
-                Intent adminIntent = new Intent(this, AdminActivity.class);
-                startActivityForResult(adminIntent, ADMIN_PAGE);
-            }
-        }
-
-    }
-
-    public void logout() {
-        mAuth.signOut();
-        finish();
-        startActivity(getIntent());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //Check If intent requested back from Login Page
-        if (requestCode == LOGIN_SUCCEED) {
-            //Check if it succeeded successfully
-            if (resultCode == Activity.RESULT_OK) {
-                //Finish this activity and reload it again
-                finish();
-                startActivity(getIntent());
-            }
-        }
-        if(requestCode == FavoriteRecyclerViewAdapter.MENU_ORDER){
-            if(resultCode == Activity.RESULT_OK){
-                AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-                dialog.setTitle("Successfully ordered!");
-                dialog.setMessage("Your order was received, it will be confirmed soon. Please be in touch");
-                dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        if(requestCode == MENU_CHANGED){
+            if(resultCode == AdminMenuInfoActivity.MENU_UPDATED){
+                dialog.setTitle("Menu edited");
+                dialog.setMessage("Menu information has been edited successfully!");
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
                     }
                 });
-
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+            }
+            if(resultCode == AdminMenuInfoActivity.MENU_DELETED){
+                dialog.setTitle("Menu deleted");
+                dialog.setMessage("Menu has been deleted successfully!");
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
                 AlertDialog alertDialog = dialog.create();
                 alertDialog.show();
             }
         }
-        if (requestCode == ADMIN_PAGE){
-            if(resultCode == Activity.RESULT_OK){
-                logout();
+        if(requestCode == MENU_CREATE){
+            if(resultCode == AdminMenuCreateActivity.MENU_CREATED){
+                dialog.setTitle("Menu added");
+                dialog.setMessage("Menu information has been created successfully!");
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+            }
+        }
+
+        if(requestCode == ORDER_REQUEST_CODE){
+            if(resultCode == AdminOrderInfoActivity.ORDER_STATUS_CHANGED){
+                dialog.setTitle("Order stats changed");
+                dialog.setMessage("Order status has been changed successfully!");
+                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
             }
         }
 
@@ -150,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_admin, menu);
         return true;
     }
 
@@ -162,12 +155,15 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.log_out) {
-            logout();
+        if (id == R.id.action_settings) {
+            Intent returnIntent = new Intent();
+            setResult(Activity.RESULT_OK,returnIntent);
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -178,30 +174,32 @@ public class MainActivity extends AppCompatActivity {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "FAVORITE";
+                    return "USERS";
                 case 1:
-                    return "MENU";
+                    return "MENUS";
                 case 2:
-                    return "PROFILE";
+                    return "ORDERS";
             }
             return null;
         }
-
         @Override
         public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    Tab1Favorite tab1 = new Tab1Favorite();
+                    Tab1AdminUsers tab1 = new Tab1AdminUsers();
                     return tab1;
                 case 1:
-                    Tab2Menu tab2 = new Tab2Menu();
+                    Tab2AdminMenus tab2 = new Tab2AdminMenus();
                     return tab2;
                 case 2:
-                    Tab3Profile tab3 = new Tab3Profile();
+                    Tab3AdminOrders tab3 = new Tab3AdminOrders();
                     return tab3;
                 default:
                     return null;

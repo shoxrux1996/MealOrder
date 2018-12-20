@@ -10,14 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.jackandphantom.circularimageview.RoundedImage;
 import com.koushikdutta.ion.Ion;
 
@@ -36,53 +28,12 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
     private Context context;
     public static int MENU_ORDER;
 
-    public FavoriteRecyclerViewAdapter(Context context) {
-        this.favorites = new ArrayList<>();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Query myQuery = databaseReference.child(uID).child("favorites");
-        myQuery.addChildEventListener(new FavoritesChildEventListener());
+    public FavoriteRecyclerViewAdapter(Context context, List<Favorite> favorites) {
+        this.favorites = favorites;
         this.context = context;
 
     }
 
-    class FavoritesChildEventListener implements ChildEventListener{
-        
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Favorite favorite = dataSnapshot.getValue(Favorite.class);
-            favorite.setKey(dataSnapshot.getKey());
-            favorites.add(0,favorite);
-            notifyDataSetChanged();
-
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-            Favorite favorite = dataSnapshot.getValue(Favorite.class);
-            favorite.setKey(dataSnapshot.getKey());
-            for(int i = 0; i< favorites.size(); i++){
-                if(favorites.get(i).getKey() == favorite.getKey())
-                    favorites.remove(i);
-            }
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    }
     @Override
     public FavoriteItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.favorite_recycler_view_item, parent,false);

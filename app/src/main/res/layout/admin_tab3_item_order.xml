@@ -13,7 +13,8 @@
         android:id="@+id/order_rounded_image"
         android:src="@drawable/placeholder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:scaleType="centerCrop"
+        android:layout_height="160dp" />
     <LinearLayout
         android:layout_gravity="left|bottom"
         android:layout_width="match_parent"

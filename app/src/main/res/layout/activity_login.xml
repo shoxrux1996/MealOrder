@@ -30,7 +30,8 @@
         <EditText
             android:id="@+id/login_password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
 
         <Button
             android:layout_width="match_parent"

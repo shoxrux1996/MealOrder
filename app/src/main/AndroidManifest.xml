@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme" />
@@ -19,8 +19,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,15 +27,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".OrderListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".OrderListActivity" />
         <activity
-            android:name=".MenuInfoActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".MenuInfoActivity" />
+        <activity
+            android:name=".MakeOrderActivity" />
+        <activity
+            android:name=".AdminActivity"
+            android:label="@string/title_activity_admin" />
+        <activity
+            android:name=".AdminMenuInfoActivity">
 
         </activity>
-        <activity android:name=".MakeOrderActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".AdminMenuCreateActivity">
+
+        </activity>
+        <activity
+            android:name=".AdminOrderInfoActivity"
+            android:label="@string/title_activity_admin_order_info">
 
         </activity>
     </application>

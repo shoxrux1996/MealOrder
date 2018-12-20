@@ -111,6 +111,8 @@
             <android.support.design.widget.FloatingActionButton
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/info_menu_order_button"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_gravity="right|bottom"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="10dp"

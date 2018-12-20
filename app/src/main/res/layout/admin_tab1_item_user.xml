@@ -1,0 +1,46 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+
+    android:layout_height="100dp"
+    android:background="?selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+    <ImageView
+        android:id="@+id/admin_user_image"
+        android:layout_width="0dp"
+        android:padding="5dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:src="@drawable/contact"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="6"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:gravity="start|center"
+            android:id="@+id/admin_user_email"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:text="shohrux.shomaxmudov@gmail.com"
+            android:textSize="14dp"
+            android:paddingLeft="10dp"
+            />
+        <TextView
+            android:id="@+id/admin_user_name"
+            android:layout_width="match_parent"
+            android:gravity="start|center"
+            android:layout_height="40dp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Shokhrukh Shomakhmudov"
+            android:paddingLeft="10dp"
+            android:textSize="16dp"/>
+    </LinearLayout>
+</LinearLayout>

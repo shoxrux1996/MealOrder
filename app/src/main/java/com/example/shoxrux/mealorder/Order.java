@@ -1,10 +1,12 @@
 package com.example.shoxrux.mealorder;
 
+import java.io.Serializable;
+
 /**
  * Created by shoxrux on 12/17/18.
  */
 
-public class Order {
+public class Order implements Serializable{
     public static final int STATE_WAITING = 0;
     public static final int STATE_APPROVED = 1;
     public static final int STATE_REJECTED = 2;
@@ -20,11 +22,12 @@ public class Order {
     private int status;
     private String image;
     private String key;
+    private String userID;
 
 
 
+    public Order(String name, String title, String date, Double price, int amount, Double totalPrice, String address, int status, String image, String userID) {
 
-    public Order(String name, String title, String date, Double price, int amount, Double totalPrice, String address, int status, String image) {
         this.name = name;
         this.title = title;
         this.date = date;
@@ -34,6 +37,7 @@ public class Order {
         this.status= status;
         this.image = image;
         this.address = address;
+        this.userID = userID;
 
     }
     public Order(){
@@ -118,6 +122,14 @@ public class Order {
 
     public String getImage() {
         return image;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
 

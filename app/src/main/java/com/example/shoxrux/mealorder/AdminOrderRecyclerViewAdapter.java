@@ -1,8 +1,8 @@
 package com.example.shoxrux.mealorder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,27 +18,37 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by shoxrux on 12/17/18.
+ * Created by shoxrux on 12/20/18.
  */
 
-public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecyclerViewAdapter.OrderItemViewHolder> {
-    private Context context;
-    private List<Order> orders;
+public class AdminOrderRecyclerViewAdapter extends RecyclerView.Adapter<AdminOrderRecyclerViewAdapter.AdminOrderViewItemHolder>{
 
-    public OrderRecyclerViewAdapter(Context context, List<Order> orders) {
+    private List<Order> orders;
+    private Context context;
+
+    public AdminOrderRecyclerViewAdapter(Context context, List<Order> orders) {
         this.orders = orders;
         this.context = context;
     }
 
     @Override
-    public OrderItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.order_recycler_view_item, parent,false);
-        return new OrderItemViewHolder(view);
+    public AdminOrderViewItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.admin_tab3_item_order, parent,false);
+        return new AdminOrderViewItemHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(OrderItemViewHolder holder, int position) {
+    public void onBindViewHolder(AdminOrderViewItemHolder holder, int position) {
         holder.populate(orders.get(position));
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void OnClick(View view, int position) {
+                Intent orderInfo = new Intent(context, AdminOrderInfoActivity.class);
+                orderInfo.putExtra("orderInfo", orders.get(position));
+                AdminActivity adminActivity = (AdminActivity) context;
+                adminActivity.startActivityForResult(orderInfo, AdminActivity.ORDER_REQUEST_CODE);
+            }
+        });
     }
 
     @Override
@@ -46,7 +56,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
         return orders.size();
     }
 
-    class OrderItemViewHolder extends RecyclerView.ViewHolder{
+    class AdminOrderViewItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.order_rounded_image)
         RoundedImage roundedImage;
         @BindView(R.id.order_title)
@@ -62,10 +72,15 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
         @BindView(R.id.order_status_image)
         ImageView statusView;
 
+        private ItemClickListener itemClickListener;
 
-        public OrderItemViewHolder(View itemView) {
+        public AdminOrderViewItemHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+        public void setItemClickListener(ItemClickListener itemClickListener){
+            this.itemClickListener = itemClickListener;
         }
 
         public void populate(Order order){
@@ -91,8 +106,11 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
                 default:
                     break;
             }
+        }
 
-
+        @Override
+        public void onClick(View view) {
+            itemClickListener.OnClick(view, getAdapterPosition());
         }
     }
 }

@@ -77,6 +77,7 @@
             android:id="@+id/register_password"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:inputType="textPassword"
             android:layout_weight="2"
              />
 
@@ -89,6 +90,7 @@
         <EditText
             android:id="@+id/register_password_confirm"
             android:layout_width="match_parent"
+            android:inputType="textPassword"
             android:layout_height="0dp"
             android:layout_weight="2"/>
 

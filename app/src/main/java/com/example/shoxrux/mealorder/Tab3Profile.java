@@ -36,33 +36,19 @@ public class Tab3Profile extends Fragment {
     private Client client;
     private ImageView imageView;
     private TextView textView;
+    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.tab3profile, container, false);
+        rootView = inflater.inflate(R.layout.tab3profile, container, false);
 
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         List<String> userInfos = Arrays.asList("+998908082443",currentUser.getEmail(),"www.inha.uz","Order List");
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
         //Get current user info to Object and complete user interface with user information
-        databaseReference.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                client = dataSnapshot.getValue(Client.class);
-                client.setKey(dataSnapshot.getKey());
-
-                Ion.with(rootView.getContext()).load(client.getImage()).withBitmap()
-                        .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
-                textView.setText(client.getFirstName()+" "+client.getLastName());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        databaseReference.child(currentUser.getUid()).addValueEventListener(new UserValueEventListener());
 
         ListView listView = rootView.findViewById(R.id.profile_list_view);
         ProfileAdapter adapter = new ProfileAdapter(rootView.getContext(), userInfos);
@@ -70,15 +56,30 @@ public class Tab3Profile extends Fragment {
         textView = rootView.findViewById(R.id.profile_name);
 
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i == 3){
-                    Intent orderList = new Intent(rootView.getContext(), OrderListActivity.class);
-                    startActivity(orderList);
-                }
-            }
-        });
+        listView.setOnItemClickListener(new ProfileOnItemClickListener());
         return rootView;
+    }
+    class ProfileOnItemClickListener implements AdapterView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            if(i == 3){
+                Intent orderList = new Intent(view.getContext(), OrderListActivity.class);
+                startActivity(orderList);
+            }
+        }
+    }
+    class UserValueEventListener implements ValueEventListener {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            client = dataSnapshot.getValue(Client.class);
+            client.setKey(dataSnapshot.getKey());
+            Ion.with(rootView.getContext()).load(client.getImage()).withBitmap()
+                    .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
+            textView.setText(client.getFirstName() + " " + client.getLastName());
+        }
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
     }
 }

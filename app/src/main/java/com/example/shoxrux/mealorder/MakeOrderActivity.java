@@ -62,10 +62,10 @@ public class MakeOrderActivity extends AppCompatActivity {
 
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         //Get current user info to Object and complete user interface with user information
 
-        databaseReference.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("users").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 client = dataSnapshot.getValue(Client.class);
@@ -112,8 +112,10 @@ public class MakeOrderActivity extends AppCompatActivity {
             String time = df.format(currentTime.getTime());
             Order order = new Order(client.getFirstName() + " " + client.getLastName(),
                     menu.getTitle(), time, menu.getPrice(), amountOfOrder,
-                    amountOfOrder * menu.getPrice(), address,Order.STATE_WAITING, menu.getImageURL());
-            databaseReference.child(currentUser.getUid()).child("orders").push().setValue(order);
+                    amountOfOrder * menu.getPrice(), address,Order.STATE_WAITING, menu.getImageURL(), client.getKey());
+            String key = databaseReference.child(currentUser.getUid()).child("orders").push().getKey();
+            databaseReference.child("users").child(currentUser.getUid()).child("orders").child(key).setValue(order);
+            databaseReference.child("orders").child(key).setValue(order);
         }
     }
 
