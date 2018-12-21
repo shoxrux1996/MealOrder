@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -13,6 +13,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.shoxrux.mealorder.Model.Client;
+import com.example.shoxrux.mealorder.Model.Menu;
+import com.example.shoxrux.mealorder.Model.Order;
+import com.example.shoxrux.mealorder.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,15 +36,15 @@ import butterknife.ButterKnife;
 public class MakeOrderActivity extends AppCompatActivity {
     private Client client;
     @BindView(R.id.make_order_image)
-    ImageView imageView;
+    public ImageView imageView;
     @BindView(R.id.make_order_amount)
-    EditText amountEditText;
+    public EditText amountEditText;
     @BindView(R.id.make_order_address)
-    EditText addressEditText;
+    public EditText addressEditText;
     @BindView(R.id.make_order_button)
-    Button makeOrderButton;
+    public Button makeOrderButton;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    public Toolbar toolbar;
     private ProgressDialog progressDialog;
     private DatabaseReference databaseReference;
     private FirebaseUser currentUser;
@@ -70,6 +74,7 @@ public class MakeOrderActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 client = dataSnapshot.getValue(Client.class);
                 client.setKey(dataSnapshot.getKey());
+                System.out.println(client.getEmail()+dataSnapshot.getKey()+" client");
             }
 
             @Override

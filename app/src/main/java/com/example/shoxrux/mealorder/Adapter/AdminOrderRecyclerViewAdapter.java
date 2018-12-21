@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.shoxrux.mealorder.Activity.AdminActivity;
+import com.example.shoxrux.mealorder.Activity.AdminOrderInfoActivity;
+import com.example.shoxrux.mealorder.ItemClickListener;
+import com.example.shoxrux.mealorder.Model.Order;
+import com.example.shoxrux.mealorder.R;
 import com.jackandphantom.circularimageview.RoundedImage;
 import com.koushikdutta.ion.Ion;
 

@@ -1,14 +1,15 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.shoxrux.mealorder.Model.Order;
+import com.example.shoxrux.mealorder.R;
 import com.jackandphantom.circularimageview.RoundedImage;
 import com.koushikdutta.ion.Ion;
 

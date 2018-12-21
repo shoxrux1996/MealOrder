@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.shoxrux.mealorder.MenuInfoActivity"
+    tools:context="com.example.shoxrux.mealorder.Activity.MenuInfoActivity"
     >
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -36,7 +36,7 @@
             android:src="@drawable/placeholder"
             />
     </RelativeLayout>
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="25dp"
@@ -60,6 +60,8 @@
                 android:textColor="@color/black"
                 android:hint="Burger King"
                 android:textSize="13dp"
+                android:inputType="text"
+                android:imeOptions="actionNext"
                 />
             <TextView
                 android:layout_width="match_parent"
@@ -74,6 +76,7 @@
                 android:textColor="@color/black"
                 android:hint="15000"
                 android:textSize="13dp"
+                android:imeOptions="actionNext"
                 />
             <TextView
                 android:textStyle="bold"
@@ -87,7 +90,10 @@
                 android:scrollbars="vertical"
                 android:textColor="@color/black"
                 android:gravity="start|top"
-                android:minLines="3"
+                android:maxLines="3"
+                android:minLines="2"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionNext"
                 android:hint="Lorem ipsum dolor sit amet  dasdasdasda sdadnjasdjsajdsjadasdjasdajdjdjasdjasdjajdjadsjj..."
                 android:textSize="13dp"
                 />
@@ -103,7 +109,10 @@
                 android:scrollbars="vertical"
                 android:textColor="@color/black"
                 android:gravity="start|top"
-                android:minLines="3"
+                android:maxLines="3"
+                android:minLines="2"
+                android:inputType="textMultiLine"
+                android:imeOptions="actionNext"
                 android:hint="Lorem ipsum ..."
                 android:textSize="13dp"/>
             <Button
@@ -116,5 +125,5 @@
                 android:layout_height="wrap_content"
                 android:text="Save"/>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

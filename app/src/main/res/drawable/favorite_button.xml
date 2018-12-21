@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_checked="true" android:drawable="@drawable/favorite_blue">
+    <item android:state_checked="true" android:drawable="@drawable/star_blue">
 
     </item>
-    <item android:state_checked="false" android:drawable="@drawable/favorite">
+    <item android:state_checked="false" android:drawable="@drawable/star_white">
 
     </item>
 </selector>

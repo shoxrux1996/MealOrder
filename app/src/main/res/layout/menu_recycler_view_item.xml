@@ -54,8 +54,11 @@
             <RadioButton
                 android:id="@+id/menu_favorite_image"
                 android:layout_width="wrap_content"
+                android:gravity="center"
+                android:padding="10dp"
                 android:layout_height="wrap_content"
                 android:button="@drawable/favorite_button"
+                android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 />

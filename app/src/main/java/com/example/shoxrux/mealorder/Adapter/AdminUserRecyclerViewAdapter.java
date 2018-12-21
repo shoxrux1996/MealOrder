@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Adapter;
 
 
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.shoxrux.mealorder.Model.Client;
+import com.example.shoxrux.mealorder.R;
 import com.koushikdutta.ion.Ion;
 
 import java.util.List;

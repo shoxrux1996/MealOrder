@@ -1,20 +1,18 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.shoxrux.mealorder.Model.Order;
+import com.example.shoxrux.mealorder.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.koushikdutta.ion.Ion;
@@ -25,25 +23,25 @@ import butterknife.ButterKnife;
 public class AdminOrderInfoActivity extends AppCompatActivity {
     public static int ORDER_STATUS_CHANGED = 108;
     @BindView(R.id.admin_order_image)
-    ImageView imageView;
+    public ImageView imageView;
     @BindView(R.id.admin_order_title)
-    TextView titleView;
+    public TextView titleView;
     @BindView(R.id.admin_order_amount)
-    TextView amountView;
+    public TextView amountView;
     @BindView(R.id.admin_order_price)
-    TextView priceView;
+    public TextView priceView;
     @BindView(R.id.admin_order_total_price)
-    TextView totalPriceView;
+    public TextView totalPriceView;
     @BindView(R.id.admin_order_address)
-    TextView addressView;
+    public TextView addressView;
     @BindView(R.id.admin_order_name)
-    TextView nameView;
+    public TextView nameView;
     @BindView(R.id.admin_order_radio_group)
-    RadioGroup radioGroup;
+    public RadioGroup radioGroup;
     @BindView(R.id.admin_order_radio_accept)
-    RadioButton acceptButton;
+    public RadioButton acceptButton;
     @BindView(R.id.admin_order_radio_deny)
-    RadioButton denyButton;
+    public RadioButton denyButton;
     private ProgressDialog progressDialog;
 
     @Override

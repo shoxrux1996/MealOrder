@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Fragment;
 
 
 import android.os.Bundle;
@@ -8,9 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
+import com.example.shoxrux.mealorder.Adapter.AdminUserRecyclerViewAdapter;
+import com.example.shoxrux.mealorder.Model.Client;
+import com.example.shoxrux.mealorder.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -1,6 +1,11 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Model;
+
+import com.google.firebase.database.Exclude;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shoxrux on 12/14/18.
@@ -13,8 +18,10 @@ public class Menu implements Serializable {
     private String ingredients;
     private Double price;
     private String key;
+    private HashMap<String, Boolean> users = new HashMap<>();
 
-    public Menu(String imageURL, String title, String description, String ingredients ,Double price) {
+
+    public Menu(String imageURL, String title, String description, String ingredients , Double price) {
         this.imageURL = imageURL;
         this.title = title;
         this.description = description;
@@ -71,4 +78,16 @@ public class Menu implements Serializable {
     public void setPrice(Double price) {
         this.price = price;
     }
+
+    public HashMap<String, Boolean> getUsers() {
+        return users;
+    }
+
+    public void setUsers(HashMap<String, Boolean> users) {
+        this.users = users;
+    }
+
+
+
+
 }

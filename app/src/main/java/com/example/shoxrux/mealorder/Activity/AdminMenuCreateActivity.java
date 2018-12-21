@@ -1,16 +1,13 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -20,6 +17,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.shoxrux.mealorder.Model.Menu;
+import com.example.shoxrux.mealorder.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.koushikdutta.ion.Ion;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -41,24 +39,22 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
     public static int PICKER_CODE = 100;
     public static int MENU_CREATED = 105;
     @BindView(R.id.admin_menu_image)
-    ImageView imageView;
+    public ImageView imageView;
     @BindView(R.id.admin_menu_title)
-    EditText titleView;
+    public EditText titleView;
     @BindView(R.id.admin_menu_price)
-    EditText priceView;
+    public EditText priceView;
     @BindView(R.id.admin_menu_description)
-    EditText descriptionView;
+    public EditText descriptionView;
     @BindView(R.id.admin_menu_ingredients)
-    EditText ingredientsView;
+    public EditText ingredientsView;
     @BindView(R.id.admin_menu_save_button)
-    Button orderButton;
-
+    public Button orderButton;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    public Toolbar toolbar;
 
     private Uri selectedImage = null;
     private ProgressDialog progressDialog;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +82,7 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(validateInputs()){
-                    progressDialog.setMessage("Editing menu...");
+                    progressDialog.setMessage("Creating menu...");
                     progressDialog.show();
                     uploadPhotoAndStore();
                 }else{

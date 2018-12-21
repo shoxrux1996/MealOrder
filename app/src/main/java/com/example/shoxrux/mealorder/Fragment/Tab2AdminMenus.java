@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Fragment;
 
 
 import android.content.Intent;
@@ -11,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.shoxrux.mealorder.Activity.AdminActivity;
+import com.example.shoxrux.mealorder.Activity.AdminMenuCreateActivity;
+import com.example.shoxrux.mealorder.Adapter.AdminMenuRecyclerViewAdapter;
+import com.example.shoxrux.mealorder.Model.Menu;
+import com.example.shoxrux.mealorder.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +38,7 @@ public class Tab2AdminMenus extends Fragment {
     private List<Menu> menus;
 
     @BindView(R.id.admin_menu_add_button)
-    FloatingActionButton addButton;
+    public FloatingActionButton addButton;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

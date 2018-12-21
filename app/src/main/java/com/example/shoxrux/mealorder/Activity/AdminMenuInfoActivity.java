@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,15 +13,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shoxrux.mealorder.Model.Menu;
+import com.example.shoxrux.mealorder.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +34,7 @@ import com.koushikdutta.ion.Ion;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,25 +44,25 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
     public static int MENU_UPDATED = 103;
     public static int MENU_DELETED = 104;
     @BindView(R.id.admin_menu_image)
-    ImageView imageView;
+    public ImageView imageView;
     @BindView(R.id.admin_menu_title)
-    EditText titleView;
+    public EditText titleView;
     @BindView(R.id.admin_menu_price)
-    EditText priceView;
+    public EditText priceView;
     @BindView(R.id.admin_menu_description)
-    EditText descriptionView;
+    public EditText descriptionView;
     @BindView(R.id.admin_menu_ingredients)
-    EditText ingredientsView;
+    public EditText ingredientsView;
     @BindView(R.id.admin_menu_save_button)
-    Button orderButton;
+    public Button orderButton;
     @BindView(R.id.admin_menu_remove_button)
-    FloatingActionButton removeButton;
+    public FloatingActionButton removeButton;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    public Toolbar toolbar;
 
     private Uri selectedImage = null;
     private ProgressDialog progressDialog;
-    private  Menu menu;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +89,7 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                        databaseReference.child("menus").child(menu.getKey()).removeValue();
-                        //If creating menu finished ok, we will finish this activity with success result
-                        Intent returnIntent = new Intent();
-                        setResult(MENU_DELETED,returnIntent);
-                        finish();
-
+                        deleteMenu();
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
@@ -128,7 +123,18 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
             }
         });
     }
-
+    public void deleteMenu(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        HashMap<String, Boolean> users = menu.getUsers();
+        for(String key : users.keySet()){
+            databaseReference.child("users").child(key).child("favorites").child(menu.getKey()).removeValue();
+        }
+        databaseReference.child("menus").child(menu.getKey()).removeValue();
+        //If creating menu finished ok, we will finish this activity with success result
+        Intent returnIntent = new Intent();
+        setResult(MENU_DELETED,returnIntent);
+        finish();
+    }
     public boolean validateInputs(){
         if(titleView.getText().toString().isEmpty() || descriptionView.getText().toString().isEmpty() ||
                 ingredientsView.getText().toString().isEmpty() || priceView.getText().toString().isEmpty()){
@@ -157,17 +163,19 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
-                        writeMenuToDatabase(downloadUri.toString());
+                        updateMenuToDatabase(downloadUri.toString());
                     }else{
-                        writeMenuToDatabase(null);
+                        updateMenuToDatabase(null);
                     }
                 }
             });
         }else{
-            writeMenuToDatabase(null);
+            updateMenuToDatabase(null);
         }
     }
-    public void writeMenuToDatabase(String imageURL){
+    public void updateMenuToDatabase(String imageURL){
+        HashMap<String, Boolean> users = menu.getUsers();
+
         menu.setTitle(titleView.getText().toString());
         menu.setDescription(descriptionView.getText().toString());
         menu.setPrice(Double.parseDouble(priceView.getText().toString()));
@@ -175,9 +183,12 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
         if(imageURL != null){
             menu.setImageURL(imageURL);
         }
+
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("menus").child(menu.getKey()).setValue(menu);
-
+        for(String key : users.keySet()){
+            databaseReference.child("users").child(key).child("favorites").child(menu.getKey()).setValue(menu);
+        }
         //hide the process dialog
         progressDialog.dismiss();
         //If creating menu finished ok, we will finish this activity with success result

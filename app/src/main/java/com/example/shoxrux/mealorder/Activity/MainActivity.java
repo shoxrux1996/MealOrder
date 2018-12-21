@@ -1,11 +1,9 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,19 +13,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
-
+import com.example.shoxrux.mealorder.Adapter.FavoriteRecyclerViewAdapter;
+import com.example.shoxrux.mealorder.R;
+import com.example.shoxrux.mealorder.Fragment.Tab1Favorite;
+import com.example.shoxrux.mealorder.Fragment.Tab2Menu;
+import com.example.shoxrux.mealorder.Fragment.Tab3Profile;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
+//This activity starts after log in as User
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -56,30 +52,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Check user logged or not, if not go to login page
+        // Check user logged or not, if not go to login page
         checkUserSigned();
-
+        //Find a toolbar from id
+        //and set to Action Bar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
-//        databaseReference.child("users").child(mAuth.getCurrentUser().getUid()).child("favorites").push().setValue(favorite);
-
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        //Create a Tab Layout (buttons)
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        //set up view pager to the layout
         tabLayout.setupWithViewPager(mViewPager);
+        //set icons of the tab buttons
         tabLayout.getTabAt(0).setIcon(R.drawable.favorite);
         tabLayout.getTabAt(1).setIcon(R.drawable.menu);
         tabLayout.getTabAt(2).setIcon(R.drawable.user);
+        //Add listener on swiping in the page
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //Add listener to buttons of tab
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
 
@@ -88,25 +86,30 @@ public class MainActivity extends AppCompatActivity {
 
     //Check user logged or not, if not go to login page
     private void checkUserSigned() {
+        //Get Firebase auth
         mAuth = FirebaseAuth.getInstance();
-        // Check if user is signed in
+        //Get current user
         currentUser = mAuth.getCurrentUser();
+        // Check if user is signed in
         if (currentUser == null) {
             //start Login Activity
             Intent loginIntent = new Intent(this, LoginActivity.class);
             startActivityForResult(loginIntent, LOGIN_SUCCEED);
         }else{
-            if(currentUser.getEmail().equals("admin@admin.com")){
-                //start Login Activity
+            //If current user admin and signed successfully
+            if(currentUser.getEmail().equals("admin@gmail.com")){
+                //start Admin Activity
                 Intent adminIntent = new Intent(this, AdminActivity.class);
                 startActivityForResult(adminIntent, ADMIN_PAGE);
             }
         }
 
     }
-
+    //Log Out function
     public void logout() {
+        //sing out of Firebase
         mAuth.signOut();
+        //finish the activity
         finish();
         startActivity(getIntent());
     }
@@ -139,7 +142,9 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         }
+        //Check If intent requested back from Admin Activity
         if (requestCode == ADMIN_PAGE){
+            //If the result RESULT_OK and log out admin
             if(resultCode == Activity.RESULT_OK){
                 logout();
             }
@@ -178,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+        //Set title of tab buttons
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
@@ -190,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-
+        // getItem is called to instantiate the fragment for the given page.
         @Override
         public Fragment getItem(int position) {
             switch (position) {

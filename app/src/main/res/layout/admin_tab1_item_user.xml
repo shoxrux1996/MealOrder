@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/admin_user_image"
         android:layout_width="0dp"
-        android:padding="5dp"
+        android:scaleType="centerCrop"
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:src="@drawable/contact"/>

@@ -1,22 +1,20 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.shoxrux.mealorder.Model.Menu;
+import com.example.shoxrux.mealorder.R;
 import com.koushikdutta.ion.Ion;
 
 import butterknife.BindView;
@@ -25,17 +23,17 @@ import butterknife.ButterKnife;
 public class MenuInfoActivity extends AppCompatActivity {
     public static int MENU_ORDER = 243;
     @BindView(R.id.info_menu_image)
-    ImageView imageView;
+    public ImageView imageView;
     @BindView(R.id.info_menu_price)
-    TextView priceView;
+    public TextView priceView;
     @BindView(R.id.info_menu_description)
-    TextView descriptionView;
+    public TextView descriptionView;
     @BindView(R.id.info_menu_ingredients)
-    TextView ingredientsView;
+    public TextView ingredientsView;
     @BindView(R.id.info_menu_order_button)
-    FloatingActionButton orderButton;
+    public FloatingActionButton orderButton;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    public Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

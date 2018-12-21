@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Model;
 
 /**
  * Created by shoxrux on 12/6/18.
@@ -9,22 +9,24 @@ public class Client {
     private String firstName;
     private String lastName;
 
-//    private String phone;
     private String image;
+    private String phone;
     private String key;
 
 
-    public Client(String email, String firstName, String lastName) {
+
+    public Client(String email, String firstName, String lastName, String phone) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.phone = phone;
     }
 
-    public Client(String email, String firstName, String lastName, String image) {
+    public Client(String email, String firstName, String lastName, String image, String phone) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-//        this.phone = phone;
+        this.phone = phone;
         this.image = image;
     }
     public Client(){
@@ -62,13 +64,13 @@ public class Client {
         this.lastName = lastName;
     }
 
-//    public String getPhone() {
-//        return phone;
-//    }
-//
-//    public void setPhone(String phone) {
-//        this.phone = phone;
-//    }
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getImage() {
         return image;

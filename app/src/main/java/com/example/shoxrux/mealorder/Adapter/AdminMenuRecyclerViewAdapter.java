@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,11 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.shoxrux.mealorder.Activity.AdminActivity;
+import com.example.shoxrux.mealorder.Activity.AdminMenuInfoActivity;
+import com.example.shoxrux.mealorder.ItemClickListener;
+import com.example.shoxrux.mealorder.Model.Menu;
+import com.example.shoxrux.mealorder.R;
 import com.jackandphantom.circularimageview.RoundedImage;
 import com.koushikdutta.ion.Ion;
 
@@ -18,7 +20,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by shoxrux on 12/20/18.

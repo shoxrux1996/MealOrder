@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.shoxrux.mealorder.AdminOrderInfoActivity"
+    tools:context="com.example.shoxrux.mealorder.Activity.AdminOrderInfoActivity"
     >
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -37,7 +37,7 @@
             android:src="@drawable/placeholder"
             />
     </RelativeLayout>
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
@@ -60,7 +60,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-
                 android:text="Burger King"
                 android:textSize="13dp"
                 />
@@ -163,5 +162,5 @@
 
             </RadioGroup>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

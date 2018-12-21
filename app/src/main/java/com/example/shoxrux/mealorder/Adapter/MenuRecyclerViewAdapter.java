@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Adapter;
 
 
 import android.content.Context;
@@ -11,6 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
+
+import com.example.shoxrux.mealorder.Activity.MenuInfoActivity;
+import com.example.shoxrux.mealorder.ItemClickListener;
+import com.example.shoxrux.mealorder.Model.Client;
+import com.example.shoxrux.mealorder.Model.Menu;
+import com.example.shoxrux.mealorder.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -30,14 +36,13 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     private List<Menu> menus;
     private List<String> favorites;
     private Context context;
-    private String uID;
+    private Client user;
 
-
-    public MenuRecyclerViewAdapter(Context context, List<Menu> menus, List<String> favorites, String uID) {
+    public MenuRecyclerViewAdapter(Context context, List<Menu> menus, List<String> favorites, Client client) {
         this.menus = menus;
         this.favorites = favorites;
         this.context = context;
-        this. uID = uID;
+        this.user = client;
     }
     @Override
     public MenuItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -64,12 +69,15 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
                 Menu menu = menus.get(position);
                 DatabaseReference databaseReference =FirebaseDatabase.getInstance().getReference();
                 if(holder.checkKeyExists(menu.getKey())){
-                    databaseReference.child("users").child(uID).child("favorites").child(menu.getKey()).removeValue();
-                    holder.favoriteImageView.setButtonDrawable(R.drawable.favorite);
+                    databaseReference.child("users").child(user.getKey()).child("favorites").child(menu.getKey()).removeValue();
+                    databaseReference.child("menus").child(menu.getKey()).child("users").child(user.getKey()).removeValue();
+                    holder.favoriteImageView.setButtonDrawable(R.drawable.star_white);
 
                 }else{
-                    databaseReference.child("users").child(uID).child("favorites").child(menu.getKey()).setValue(menu);
-                    holder.favoriteImageView.setButtonDrawable(R.drawable.favorite_blue);
+                    databaseReference.child("users").child(user.getKey()).child("favorites").child(menu.getKey()).setValue(menu);
+                    databaseReference.child("menus").child(menu.getKey()).child("users").child(user.getKey()).setValue(true);
+                    holder.favoriteImageView.setButtonDrawable(R.drawable.star_blue);
+
                 }
             }
         });
@@ -104,7 +112,6 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         }
 
         void populate(Menu menu){
-            //Load image from the server (internet) using Ion
             Ion.with(context).load(menu.getImageURL()).withBitmap()
                     .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
             titleView.setText(menu.getTitle());

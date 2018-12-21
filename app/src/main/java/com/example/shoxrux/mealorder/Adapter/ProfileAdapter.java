@@ -1,4 +1,4 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,8 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.shoxrux.mealorder.R;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,17 +25,17 @@ import java.util.Map;
 
 public class ProfileAdapter extends ArrayAdapter {
 
-    private List<String> icons = Arrays.asList("phone","message","internet","list");
-    private List<String> profileInfos;
 
-    public ProfileAdapter(Context context, List<String> infos) {
+    private List<String> profileInfos;
+    private List<String> icons = Arrays.asList("phone","message","internet","list" );
+    public ProfileAdapter(Context context, List<String> profileInfos) {
         super(context, R.layout.profile_list_item);
-        this.profileInfos = infos;
+        this.profileInfos = profileInfos;
     }
 
     @Override
     public int getCount() {
-        return icons.size();
+        return profileInfos.size();
     }
 
     @NonNull

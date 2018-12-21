@@ -1,11 +1,9 @@
-package com.example.shoxrux.mealorder;
+package com.example.shoxrux.mealorder.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,15 +13,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
-import android.widget.TextView;
-import android.widget.Toast;
+import com.example.shoxrux.mealorder.R;
+import com.example.shoxrux.mealorder.Fragment.Tab1AdminUsers;
+import com.example.shoxrux.mealorder.Fragment.Tab2AdminMenus;
+import com.example.shoxrux.mealorder.Fragment.Tab3AdminOrders;
 
+
+//This activity starts after log in as Admin
 public class AdminActivity extends AppCompatActivity {
 
     /**
@@ -40,6 +39,7 @@ public class AdminActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    //Request Codes
     public static int MENU_CHANGED = 231;
     public static int MENU_CREATE = 109;
     public static int ORDER_REQUEST_CODE= 200;
@@ -49,6 +49,8 @@ public class AdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
 
+        //Find a toolbar from id
+        //and set to Action Bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
@@ -59,21 +61,17 @@ public class AdminActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
+        //Create a Tab Layout (buttons)
         TabLayout tabLayout = findViewById(R.id.tabs);
+        //set up view pager to the layout
         tabLayout.setupWithViewPager(mViewPager);
+        //set icons of the tab buttons
         tabLayout.getTabAt(0).setIcon(R.drawable.user);
         tabLayout.getTabAt(1).setIcon(R.drawable.menu);
         tabLayout.getTabAt(2).setIcon(R.drawable.list_white);
+        //Add listener on swiping in the page
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //Add listener to buttons of tab
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
     }
@@ -81,63 +79,54 @@ public class AdminActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+
+        //If request code equal to the code when created from AdminMenuRecyclerViewAdapter to AdminMenuInfoActivity
         if(requestCode == MENU_CHANGED){
+            //if result code is equal to MENU_UPDATED after success finish of AdminMenuInfoActivity, after editing menu
             if(resultCode == AdminMenuInfoActivity.MENU_UPDATED){
-                dialog.setTitle("Menu edited");
-                dialog.setMessage("Menu information has been edited successfully!");
-                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
+                //Create Dialog with Messages and button
+                createDialogWithOk("Menu edited", "Menu information has been edited successfully!");
             }
+            //if result code is equal to MENU_DELETED after success finish of AdminMenuInfoActivity, after deleting menu
             if(resultCode == AdminMenuInfoActivity.MENU_DELETED){
-                dialog.setTitle("Menu deleted");
-                dialog.setMessage("Menu has been deleted successfully!");
-                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
+                //Create Dialog with Messages and OK button
+                createDialogWithOk("Menu deleted","Menu has been deleted successfully!");
             }
         }
+        //If request code equal to MENU_CREATE when created from Tab2AdminMenus to AdminMenuCreateActivity
         if(requestCode == MENU_CREATE){
-            if(resultCode == AdminMenuCreateActivity.MENU_CREATED){
-                dialog.setTitle("Menu added");
-                dialog.setMessage("Menu information has been created successfully!");
-                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
+            //if result code is equal to MENU_CREATED after success finish of AdminMenuCreateActivity
+            if(resultCode == AdminMenuCreateActivity.MENU_CREATED) {
+                //Create Dialog with Messages and OK button
+                createDialogWithOk("Menu added", "Menu information has been created successfully!");
             }
         }
 
+        //If ORDER_REQUEST_CODE when we intended from AdminOrderRecyclerViewAdapter (AdminActivity) to AdminOrderInfoActivity
         if(requestCode == ORDER_REQUEST_CODE){
+            //if result was ORDER_STATUS_CHANGED after success change of the status from AdminOrderInfoActivity
             if(resultCode == AdminOrderInfoActivity.ORDER_STATUS_CHANGED){
-                dialog.setTitle("Order stats changed");
-                dialog.setMessage("Order status has been changed successfully!");
-                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
+                //Create Dialog with Messages and OK button
+                createDialogWithOk("Order stats changed", "Order status has been changed successfully!");
             }
         }
 
+    }
+    //Create Dialog with Messages and OK button
+    public void createDialogWithOk(String title, String message){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        //Create Dialog with Messages and OK button
+        dialog.setTitle(title);
+        dialog.setMessage(message);
+        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = dialog.create();
+        alertDialog.show();
     }
 
     @Override
@@ -174,7 +163,7 @@ public class AdminActivity extends AppCompatActivity {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
-
+        //Set title of tab buttons
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
@@ -190,7 +179,6 @@ public class AdminActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
                     Tab1AdminUsers tab1 = new Tab1AdminUsers();
