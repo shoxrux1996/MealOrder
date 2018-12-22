@@ -47,12 +47,15 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
     @Override
     public MenuItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.menu_recycler_view_item, parent,false);
+        //Create Custom Item View holder
         return new MenuItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final MenuItemViewHolder holder,final int position) {
+        //Call populate function to set UI of the holder
         holder.populate(menus.get(position));
+        //If view holder clicks, we will create MenuInfoActivity for menu info
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void OnClick(View view, int position) {
@@ -62,22 +65,29 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
 
             }
         });
-
+        //Add or remove favorite from user
         holder.favoriteImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Get menu from list by position
                 Menu menu = menus.get(position);
                 DatabaseReference databaseReference =FirebaseDatabase.getInstance().getReference();
+                //If this menu in user favorites, remove it
                 if(holder.checkKeyExists(menu.getKey())){
+                    //Remove from Firebase Database
                     databaseReference.child("users").child(user.getKey()).child("favorites").child(menu.getKey()).removeValue();
                     databaseReference.child("menus").child(menu.getKey()).child("users").child(user.getKey()).removeValue();
+                    //set Image Icon to White Star
                     holder.favoriteImageView.setButtonDrawable(R.drawable.star_white);
 
-                }else{
+                }
+                //Else add it to user favorites
+                else{
+                    //Add to Firebase Database
                     databaseReference.child("users").child(user.getKey()).child("favorites").child(menu.getKey()).setValue(menu);
                     databaseReference.child("menus").child(menu.getKey()).child("users").child(user.getKey()).setValue(true);
+                    //set Image Icon to Blue Star
                     holder.favoriteImageView.setButtonDrawable(R.drawable.star_blue);
-
                 }
             }
         });
@@ -103,14 +113,15 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
         public MenuItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-
+            //bind the listener
             itemView.setOnClickListener(this);
 
         }
+        //Set Item Click listener interface
         public void setItemClickListener(ItemClickListener itemClickListener){
             this.itemClickListener = itemClickListener;
         }
-
+        // function to set UI of the holder
         void populate(Menu menu){
             Ion.with(context).load(menu.getImageURL()).withBitmap()
                     .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
@@ -120,6 +131,7 @@ public class MenuRecyclerViewAdapter extends RecyclerView.Adapter<MenuRecyclerVi
                 favoriteImageView.setButtonDrawable(R.drawable.favorite_blue);
 
         }
+        //Check whether this menu exists in user favorites
         public boolean checkKeyExists(String menuKey){
             for(String key: favorites){
                 if(key.equals(menuKey)){

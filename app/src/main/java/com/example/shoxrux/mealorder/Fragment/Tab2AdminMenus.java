@@ -61,7 +61,7 @@ public class Tab2AdminMenus extends Fragment {
         //Set up Recycler view
         RecyclerView recyclerView = rootView.findViewById(R.id.admin_menus_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
-        //Create Custom Adapter for Recycler View
+        //Create Custom Adapter for Recycler View, pass menus list to adapter
         mAdapter = new AdminMenuRecyclerViewAdapter(rootView.getContext(), menus);
         //And set this adapter to recycler view
         recyclerView.setAdapter(mAdapter);

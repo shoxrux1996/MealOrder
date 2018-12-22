@@ -45,7 +45,7 @@ public class Tab1AdminUsers extends Fragment {
         //Set layout for recycler view
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
 
-        //Create Custom Adapter for Recycler View
+        //Create Custom Adapter for Recycler View, pass client list to adapter
         mAdapter = new AdminUserRecyclerViewAdapter(rootView.getContext(), clients);
         //And set this adapter to recycler view
         recyclerView.setAdapter(mAdapter);

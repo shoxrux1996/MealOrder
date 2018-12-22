@@ -38,36 +38,43 @@ public class Tab2Menu extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab2menu, container, false);
+        //Create empty Object of User
         user = new Client();
+        //Create empty Array List of menus
         menus = new ArrayList<>();
+        //Create empty Array List of favorites
         favorites = new ArrayList<>();
-
+        //Get Current user ID
         String uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
+        //Get Firebase Database Reference
         databaseReference = FirebaseDatabase.getInstance().getReference();
         //Get current user info to Object and complete user interface with user information
         databaseReference.child("users").child(uID).addValueEventListener(new ClientValueEventListener());
         databaseReference.child("menus").addValueEventListener(new MenusChildEventListener());
         databaseReference.child("users").child(uID).child("favorites").addValueEventListener(new FavoritesChildEventListener());
+        //Set up Recycler view
         RecyclerView mRecyclerView = rootView.findViewById(R.id.menu_recycle_view);
         mRecyclerView.setLayoutManager(new GridLayoutManager(rootView.getContext(), 2));
-
-
+        //Create Custom Adapter for Recycler View, pass menus list, favorites list and user object to adapter
         mAdapter = new MenuRecyclerViewAdapter(rootView.getContext(), menus, favorites, user);
+        //And set this adapter to recycler view
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
-
+    //Listener for retrieving menus and if any change occurs it will clear the list and get all menus from Firebase again
     class MenusChildEventListener implements ValueEventListener{
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            //If any change clear list
             menus.clear();
+            //Iterate for all menus and push each to the menus list
             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                 Menu menu = dataSnapshot1.getValue(Menu.class);
                 menu.setKey(dataSnapshot1.getKey());
                 menus.add(0,menu);
             }
+            //After getting menus, notify it to Adapter
             mAdapter.notifyDataSetChanged();
         }
         @Override
@@ -76,14 +83,18 @@ public class Tab2Menu extends Fragment {
         }
     }
 
+    //Listener for retrieving favorites and if any change occurs it will clear the list and get all favorites again
     class FavoritesChildEventListener implements ValueEventListener{
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            //If any change, clear list
             favorites.clear();
+            //Iterate for this user favorites and push each to the favorites list
             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                 favorites.add(0,dataSnapshot1.getKey());
             }
+            //After getting menus, notify it to Adapter
             mAdapter.notifyDataSetChanged();
         }
 
@@ -106,7 +117,7 @@ public class Tab2Menu extends Fragment {
             user.setLastName(client.getLastName());
             user.setImage(client.getImage());
             Log.e("Client", user.getEmail()+"");
-
+            //and notify to adapter
             mAdapter.notifyDataSetChanged();
         }
         @Override

@@ -39,12 +39,16 @@ public class AdminOrderRecyclerViewAdapter extends RecyclerView.Adapter<AdminOrd
     @Override
     public AdminOrderViewItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.admin_tab3_item_order, parent,false);
+        //Create Custom Item View holder
         return new AdminOrderViewItemHolder(view);
     }
 
     @Override
     public void onBindViewHolder(AdminOrderViewItemHolder holder, int position) {
+        //Call populate function to set UI of the holder with order
         holder.populate(orders.get(position));
+
+        //If view holder clicks, we will create AdminMenuInfoActivity for menu change
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void OnClick(View view, int position) {
@@ -82,12 +86,14 @@ public class AdminOrderRecyclerViewAdapter extends RecyclerView.Adapter<AdminOrd
         public AdminOrderViewItemHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            //bind the listener
             itemView.setOnClickListener(this);
         }
+        //Set Item Click listener interface
         public void setItemClickListener(ItemClickListener itemClickListener){
             this.itemClickListener = itemClickListener;
         }
-
+        //to set UI of the holder
         public void populate(Order order){
             //Load image from the server (internet) using Ion
             Ion.with(context).load(order.getImage()).withBitmap()
@@ -97,7 +103,7 @@ public class AdminOrderRecyclerViewAdapter extends RecyclerView.Adapter<AdminOrd
             amountView.setText(order.getAmount()+"");
             totalPriceView.setText(order.getTotalPrice()+" sum");
             dateView.setText(order.getDate());
-
+            //Set Triangle Image Status with Order status
             switch (order.getStatus()){
                 case Order.STATE_WAITING:
                     statusView.setImageResource(R.drawable.triangle_yellow);

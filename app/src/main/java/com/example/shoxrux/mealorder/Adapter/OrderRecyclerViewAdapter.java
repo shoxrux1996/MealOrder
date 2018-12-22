@@ -34,11 +34,14 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
     @Override
     public OrderItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.order_recycler_view_item, parent,false);
+        //Create Custom Item View holder
         return new OrderItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(OrderItemViewHolder holder, int position) {
+        //Call populate function to set UI of the holder
+
         holder.populate(orders.get(position));
     }
 
@@ -68,6 +71,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter<OrderRecycler
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+        // function to set UI of the holder
 
         public void populate(Order order){
             //Load image from the server (internet) using Ion

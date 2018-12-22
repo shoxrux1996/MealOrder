@@ -34,6 +34,7 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
 
     public FavoriteRecyclerViewAdapter(Context context, List<Favorite> favorites) {
         this.favorites = favorites;
+        //Create Custom Item View holder
         this.context = context;
 
     }
@@ -46,7 +47,9 @@ public class FavoriteRecyclerViewAdapter extends RecyclerView.Adapter<FavoriteRe
 
     @Override
     public void onBindViewHolder(FavoriteItemViewHolder holder, final int position) {
+        //Call populate function to set UI of the holder
         holder.populate(favorites.get(position));
+        //If view holder order button clicks, we will create MakeOrderActivity for order
         holder.orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

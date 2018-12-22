@@ -37,13 +37,17 @@ public class AdminMenuRecyclerViewAdapter extends RecyclerView.Adapter<AdminMenu
     @Override
     public AdminMenuItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.admin_tab2_item_menu, parent, false);
+        //Create Custom Item View holder
         return new AdminMenuItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(AdminMenuItemViewHolder holder, int position) {
+        //Get menu from list by position
         Menu menu = menus.get(position);
+        //Call populate function to set UI of the holder
         holder.populate(menu);
+        //If view holder clicks, we will create AdminMenuInfoActivity for menu change
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void OnClick(View view, int position) {
@@ -72,12 +76,14 @@ public class AdminMenuRecyclerViewAdapter extends RecyclerView.Adapter<AdminMenu
         public AdminMenuItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            //bind the listener
             itemView.setOnClickListener(this);
         }
+        //Set Item Click listener interface
         public void setItemClickListener(ItemClickListener itemClickListener){
             this.itemClickListener = itemClickListener;
         }
-
+        // function to set UI of the holder
         void populate(Menu menu){
             //Load image from the server (internet) using Ion
             Ion.with(context).load(menu.getImageURL()).withBitmap()

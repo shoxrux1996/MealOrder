@@ -32,29 +32,35 @@ public class Tab3AdminOrders extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.admin_tab3_orders, container, false);
-
+        //Set up Recycler view
         mRecyclerView = rootView.findViewById(R.id.order_recycler_view);
+        //Set layout for recycler view
         mRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         orders = new ArrayList<>();
-
+        //Get Firebase Database Reference
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("orders");
-
+        //Add listener to retrieve or catch change of the orders
         databaseReference.addValueEventListener(new AdminOrderValueEventListener());
-
+        //Create Custom Adapter for Recycler View, pass orders list to adapter
         mAdapter = new AdminOrderRecyclerViewAdapter(rootView.getContext(), orders);
+        //And set this adapter to recycler view
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
+    //Listener for retrieving orders and if any change occurs it will clear the list and get all orders from Firebase
     class AdminOrderValueEventListener implements ValueEventListener{
 
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            //If any change clear list
             orders.clear();
+            //Iterate for all orders and push each to the orders list
             for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
                 Order order = dataSnapshot1.getValue(Order.class);
                 order.setKey(dataSnapshot1.getKey());
                 orders.add(0, order);
             }
+            //After getting orders, notify it to Adapter
             mAdapter.notifyDataSetChanged();
         }
 

@@ -57,7 +57,7 @@ public class ProfileAdapter extends ArrayAdapter {
     private class ProfileViewHolder{
         ImageView imageView;
         TextView textView;
-
+        // function to set UI of the holder
         void setData(String imageSrc, String text){
             this.imageView.setImageResource( getContext().getResources().getIdentifier(imageSrc, "drawable", getContext().getPackageName()));
             this.textView.setText(text);

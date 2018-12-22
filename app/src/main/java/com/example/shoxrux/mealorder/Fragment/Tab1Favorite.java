@@ -50,7 +50,7 @@ public class Tab1Favorite extends Fragment {
         Query myQuery = databaseReference.child(uID).child("favorites");
         //Add listener to retrieve or change of this user orders
         myQuery.addValueEventListener(new FavoritesValueEventListener());
-        //Create Custom Adapter for Recycler View
+        //Create Custom Adapter for Recycler View, pass favorites list to adapter
         mAdapter = new FavoriteRecyclerViewAdapter(rootView.getContext(), favorites);
         //And set this adapter to recycler view
         mRecyclerView.setAdapter(mAdapter);

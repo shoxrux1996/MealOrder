@@ -45,7 +45,7 @@ public class Tab3Profile extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.tab3profile, container, false);
 
-
+        //Get current user
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         userInfos = new ArrayList<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -53,14 +53,18 @@ public class Tab3Profile extends Fragment {
         databaseReference.child(currentUser.getUid()).addValueEventListener(new UserValueEventListener());
 
         ListView listView = rootView.findViewById(R.id.profile_list_view);
+        //Create Custom Adapter for List View, pass userInfos list to adapter
         adapter = new ProfileAdapter(rootView.getContext(), userInfos);
         imageView = rootView.findViewById(R.id.profile_image);
         textView = rootView.findViewById(R.id.profile_name);
 
+        //And set this adapter to recycler view
         listView.setAdapter(adapter);
+        //List
         listView.setOnItemClickListener(new ProfileOnItemClickListener());
         return rootView;
     }
+    //If third item clicked (Orders List), we will start OrderList activity
     class ProfileOnItemClickListener implements AdapterView.OnItemClickListener{
 
         @Override
@@ -71,13 +75,17 @@ public class Tab3Profile extends Fragment {
             }
         }
     }
+    //Listener for retrieving single user and if any change occurs it will clear the userInfo list and get user from Firebase again and set it the list
     class UserValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            //If any change clear list
             userInfos.clear();
+
+            //Get user
             client = dataSnapshot.getValue(Client.class);
             client.setKey(dataSnapshot.getKey());
-
+            //Set user info to the list
             Ion.with(rootView.getContext()).load(client.getImage()).withBitmap()
                     .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
             textView.setText(client.getFirstName() + " " + client.getLastName());
@@ -85,6 +93,8 @@ public class Tab3Profile extends Fragment {
             userInfos.add(client.getEmail()+"");
             userInfos.add("www.inha.uz");
             userInfos.add("Order List");
+
+            //After getting users, notify it to Adapter
             adapter.notifyDataSetChanged();
         }
         @Override

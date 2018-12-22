@@ -35,12 +35,15 @@ public class AdminUserRecyclerViewAdapter extends RecyclerView.Adapter<AdminUser
     @Override
     public AdminUserItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
        View view = LayoutInflater.from(context).inflate(R.layout.admin_tab1_item_user,parent, false);
+        //Create Custom Item View holder
        return new AdminUserItemViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(AdminUserItemViewHolder holder, int position) {
+        //Get user from list by position
         Client client = clients.get(position);
+        //Call populate function to set UI of the holder
         holder.populate(client);
     }
 
@@ -61,6 +64,7 @@ public class AdminUserRecyclerViewAdapter extends RecyclerView.Adapter<AdminUser
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+        //function to set UI of the holder
         public void populate(Client client){
             //Load image from the server (internet) using Ion
             Ion.with(context).load(client.getImage()).withBitmap()

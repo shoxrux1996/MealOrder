@@ -73,6 +73,7 @@ public class Favorite  implements Serializable{
         this.price = price;
     }
 
+    //Cast Favorite to Menu object
     public static Menu castToMenu(Favorite favorite){
         Menu menu = new Menu(favorite.getImageURL(), favorite.getTitle(),favorite.getDescription(),favorite.getIngredients(),favorite.getPrice());
         return menu;
