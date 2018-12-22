@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //Log out when log out button clicked
         if (id == R.id.log_out) {
             logout();
         }

@@ -40,16 +40,19 @@ public class MenuInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_info);
 
         ButterKnife.bind(this);
-
+        //Set Toolbar to action bar
         setSupportActionBar(toolbar);
+        //Set arrow back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
+        //Get Menu object from intent
         final Menu menu = (Menu) intent.getSerializableExtra("menuInfo");
 
         setUI(menu);
 
+        //After order button clicked start the activity with passing menu object to Intent
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,7 +66,10 @@ public class MenuInfoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //If request from Make order activity
         if(requestCode == MENU_ORDER){
+            //and result is success
+            //show dialog about success
             if(resultCode == Activity.RESULT_OK){
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setTitle("Successfully ordered!");
@@ -84,13 +90,16 @@ public class MenuInfoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            //if toolbar arrow button back clicked
             case android.R.id.home:
+                //finish this activity
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+    //Set up the views while on create
     public void setUI(Menu menu){
         toolbar.setTitle(menu.getTitle());
         //Load image from the server (internet) using Ion

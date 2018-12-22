@@ -92,11 +92,13 @@ public class Tab2Menu extends Fragment {
 
         }
     }
+    //Listener: Get current user and assign to user object
     class ClientValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-
+            //Get User from DB
             Client client = dataSnapshot.getValue(Client.class);
+            //set key
             client.setKey(dataSnapshot.getKey());
             user.setKey(client.getKey());
             user.setEmail(client.getEmail());
@@ -104,6 +106,7 @@ public class Tab2Menu extends Fragment {
             user.setLastName(client.getLastName());
             user.setImage(client.getImage());
             Log.e("Client", user.getEmail()+"");
+
             mAdapter.notifyDataSetChanged();
         }
         @Override

@@ -52,25 +52,35 @@ public class Tab2AdminMenus extends Fragment {
                 adminActivity.startActivityForResult(createIntent, AdminActivity.MENU_CREATE);
             }
         });
+        //Create empty Array List of menus
         menus = new ArrayList<>();
+        //Get Firebase Database Reference
         databaseReference = FirebaseDatabase.getInstance().getReference();
+        //Add listener to retrieve or catch any change of menus
         databaseReference.child("menus").addValueEventListener(new AdminMenuValueEventListener());
-
+        //Set up Recycler view
         RecyclerView recyclerView = rootView.findViewById(R.id.admin_menus_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(container.getContext()));
+        //Create Custom Adapter for Recycler View
         mAdapter = new AdminMenuRecyclerViewAdapter(rootView.getContext(), menus);
+        //And set this adapter to recycler view
         recyclerView.setAdapter(mAdapter);
         return rootView;
     }
+
+    //Listener for retrieving menus and if any change occurs it will clear the list and get all menus from Firebase again
     class AdminMenuValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            //If any change clear list
             menus.clear();
+            //Iterate for all menus and push each to the menus list
             for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()){
                 Menu menu = dataSnapshot1.getValue(Menu.class);
                 menu.setKey(dataSnapshot1.getKey());
                 menus.add(0, menu);
             }
+            //After getting menus, notify it to Adapter
             mAdapter.notifyDataSetChanged();
         }
 

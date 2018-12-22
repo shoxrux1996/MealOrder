@@ -25,10 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by shoxrux on 12/13/18.
- */
-
 public class Tab1Favorite extends Fragment {
     private RecyclerView mRecyclerView;
     private List<Favorite> favorites;
@@ -41,19 +37,22 @@ public class Tab1Favorite extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.tab1favorite, container, false);
+
+        //Set up Recycler view
         mRecyclerView = rootView.findViewById(R.id.favorite_recycle_view);
+        //Set layout for recycler view
         mRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         favorites = new ArrayList<>();
-
+        //Get Firebase Database Reference
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        //Get current user id
         uID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-//        FirebaseDatabase.getInstance().getReference().child("menus").addChildEventListener(new MenuValueEventListener());
         Query myQuery = databaseReference.child(uID).child("favorites");
+        //Add listener to retrieve or change of this user orders
         myQuery.addValueEventListener(new FavoritesValueEventListener());
-
+        //Create Custom Adapter for Recycler View
         mAdapter = new FavoriteRecyclerViewAdapter(rootView.getContext(), favorites);
-
+        //And set this adapter to recycler view
         mRecyclerView.setAdapter(mAdapter);
         return rootView;
     }
@@ -72,6 +71,7 @@ public class Tab1Favorite extends Fragment {
                 favorites.add(favorite);
 
             }
+            //After iteration, notify it to Adapter
             mAdapter.notifyDataSetChanged();
         }
 
@@ -79,43 +79,6 @@ public class Tab1Favorite extends Fragment {
         public void onCancelled(DatabaseError databaseError) {
 
         }
-    }
-    class MenuValueEventListener implements ChildEventListener {
-
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            Menu menu =dataSnapshot.getValue(Menu.class);
-            for(int i=0;i<favorites.size(); i++) {
-                if(favorites.get(i).getKey().equals(menu.getKey())){
-                    databaseReference.child(uID).child("favorites").child(dataSnapshot.getKey()).setValue(menu);
-                    System.out.println(dataSnapshot.getKey()+ "changed");
-                }
-            }
-
-        }
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-            for(int i=0;i<favorites.size(); i++) {
-                if(favorites.get(i).getKey().equals(dataSnapshot.getKey())){
-                    databaseReference.child(uID).child("favorites").child(dataSnapshot.getKey()).removeValue();
-                    System.out.println(dataSnapshot.getKey()+ "removed");
-                }
-            }
-        }
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-
     }
 
 }

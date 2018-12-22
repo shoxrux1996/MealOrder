@@ -51,30 +51,37 @@ public class AdminOrderInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        //and set Toolbar to Action Bar
         setSupportActionBar(toolbar);
+        //Set arrow back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
-
         progressDialog = new ProgressDialog(this);
         Intent intent = getIntent();
+        //Get order object from previous intent
         final Order order = (Order) intent.getSerializableExtra("orderInfo");
+        //setting UI
         setUI(order);
 
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                //If accept Radio Button clicked
                 if(i == acceptButton.getId()){
                     order.setStatus(Order.STATE_APPROVED);
                 }
+                //If deny Radio Button clicked
                 if(i == denyButton.getId()){
                     order.setStatus(Order.STATE_REJECTED);
                 }
+                //Updating order status in database
                 changeOrderStatus(order);
             }
         });
     }
+
+    //Set user interface while on Create
     public void setUI(Order order){
         //Load image from the server (internet) using Ion
         Ion.with(this).load(order.getImage()).withBitmap()
@@ -87,20 +94,26 @@ public class AdminOrderInfoActivity extends AppCompatActivity {
         nameView.setText(order.getName());
 
     }
+
+    //updating order status to Database
     public void changeOrderStatus(Order order){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        //Update order
         databaseReference.child("orders").child(order.getKey()).setValue(order);
+        //Update order of the user
         databaseReference.child("users").child(order.getUserID()).child("orders").child(order.getKey()).setValue(order);
-
         //If changing order status finished ok, we will finish this activity with success result code
         Intent returnIntent = new Intent();
         setResult(ORDER_STATUS_CHANGED,returnIntent);
         finish();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            //if toolbar arrow button back clicked
             case android.R.id.home:
+                //finish this activity
                 finish();
                 return true;
             default:

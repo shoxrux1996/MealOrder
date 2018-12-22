@@ -70,16 +70,19 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_menu_info);
 
         ButterKnife.bind(this);
-
+        //and set Toolbar to Action Bar
         setSupportActionBar(toolbar);
+        //Set arrow back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         progressDialog = new ProgressDialog(this);
         Intent intent = getIntent();
+        //Get Menu object from intent
         menu = (Menu) intent.getSerializableExtra("menuInfo");
         setUI(menu);
 
+        //Deleting the menu
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +92,7 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //Call Delete function to delete the Menu
                         deleteMenu();
                     }
                 }).setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -101,6 +105,7 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+        //Set click listener and perform new
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,18 +128,24 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
             }
         });
     }
+
+    //Removing the menu from Database and removing related favorites from users
     public void deleteMenu(){
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         HashMap<String, Boolean> users = menu.getUsers();
+        //Remove favorites if the key equals to menu key
         for(String key : users.keySet()){
             databaseReference.child("users").child(key).child("favorites").child(menu.getKey()).removeValue();
         }
+        //Remove menu from DB
         databaseReference.child("menus").child(menu.getKey()).removeValue();
-        //If creating menu finished ok, we will finish this activity with success result
+        //If deleting menu finished ok, we will finish this activity with success result
         Intent returnIntent = new Intent();
         setResult(MENU_DELETED,returnIntent);
         finish();
     }
+
+    //Validation of all inputs
     public boolean validateInputs(){
         if(titleView.getText().toString().isEmpty() || descriptionView.getText().toString().isEmpty() ||
                 ingredientsView.getText().toString().isEmpty() || priceView.getText().toString().isEmpty()){
@@ -142,6 +153,7 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
         }
         return true;
     }
+    //Saving image photo to storage and after success update Menu object to Firebase Database
     public void uploadPhotoAndStore(){
         //If photo of the menu picked up successfully
         if (selectedImage != null) {
@@ -163,19 +175,25 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
+                        //update Menu in database with image
                         updateMenuToDatabase(downloadUri.toString());
                     }else{
+                        //update Menu in database without image
                         updateMenuToDatabase(null);
                     }
                 }
             });
         }else{
+            //update Menu in database without image
+
             updateMenuToDatabase(null);
         }
     }
+
+    //Updating the menu
     public void updateMenuToDatabase(String imageURL){
         HashMap<String, Boolean> users = menu.getUsers();
-
+        //Set menu object
         menu.setTitle(titleView.getText().toString());
         menu.setDescription(descriptionView.getText().toString());
         menu.setPrice(Double.parseDouble(priceView.getText().toString()));
@@ -183,9 +201,10 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
         if(imageURL != null){
             menu.setImageURL(imageURL);
         }
-
+        //Get Reference
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
         databaseReference.child("menus").child(menu.getKey()).setValue(menu);
+        //Updating favorites if key equals to menu key
         for(String key : users.keySet()){
             databaseReference.child("users").child(key).child("favorites").child(menu.getKey()).setValue(menu);
         }
@@ -199,15 +218,19 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //Request from Image Picker
         if(requestCode == PICKER_CODE){
+            //if result is success and data not null
             if(resultCode == Activity.RESULT_OK){
                 if(data != null){
                     progressDialog.setMessage("Uploading image...");
                     progressDialog.show();
+                    //get data from request
                     selectedImage = data.getData();
                     try {
                         final InputStream inputStream = getContentResolver().openInputStream(selectedImage);
                         final Bitmap selectedImageBitmap = BitmapFactory.decodeStream(inputStream);
+                        //set image to ImageView
                         imageView.setImageBitmap(selectedImageBitmap);
                         progressDialog.dismiss();
 
@@ -223,7 +246,9 @@ public class AdminMenuInfoActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            //if toolbar arrow button back clicked
             case android.R.id.home:
+                //finish this activity
                 finish();
                 return true;
             default:

@@ -48,6 +48,7 @@ public class MakeOrderActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private DatabaseReference databaseReference;
     private FirebaseUser currentUser;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,32 +57,37 @@ public class MakeOrderActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         progressDialog = new ProgressDialog(this);
 
+        //and set Toolbar to Action Bar
         setSupportActionBar(toolbar);
+        //Set arrow back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent intent = getIntent();
-        final Menu menu = (Menu) intent.getSerializableExtra("menuInfo");
+        //get Object from the intent
+        menu = (Menu) intent.getSerializableExtra("menuInfo");
+        //set all Views
         setUI(menu);
 
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         //Get current user info to Object and complete user interface with user information
-
+        //Adding listener to retrieve the user from Database of Firebase
         databaseReference.child("users").child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //Get client object
                 client = dataSnapshot.getValue(Client.class);
+                //Set key
                 client.setKey(dataSnapshot.getKey());
                 System.out.println(client.getEmail()+dataSnapshot.getKey()+" client");
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
+        //Creating order after order button clicks
         makeOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,6 +95,7 @@ public class MakeOrderActivity extends AppCompatActivity {
                     progressDialog.setMessage("Ordering ...");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
+                    //Create an order with menu, address and amount
                     makeOrder(menu, amountEditText.getText().toString(), addressEditText.getText().toString());
                     progressDialog.dismiss();
 
@@ -101,15 +108,16 @@ public class MakeOrderActivity extends AppCompatActivity {
             }
         });
     }
-
+    //Setting the views while on create
     public void setUI(Menu menu) {
+        //Download image from menu image url
         Ion.with(this).load(menu.getImageURL()).withBitmap()
                 .error(R.drawable.placeholder).placeholder(R.drawable.placeholder).intoImageView(imageView);
         toolbar.setTitle("Order " + menu.getTitle());
     }
-
+    //This function stores new order to Firebase
     public void makeOrder(Menu menu, String amount, String address) {
-
+        //if user is not null, create order object and store to Firebase
         if (client != null) {
             int amountOfOrder = Integer.parseInt(amount);
             Date currentTime = Calendar.getInstance().getTime();
@@ -119,7 +127,9 @@ public class MakeOrderActivity extends AppCompatActivity {
                     menu.getTitle(), time, menu.getPrice(), amountOfOrder,
                     amountOfOrder * menu.getPrice(), address,Order.STATE_WAITING, menu.getImageURL(), client.getKey());
             String key = databaseReference.child(currentUser.getUid()).child("orders").push().getKey();
+            //Storing in orders referens
             databaseReference.child("users").child(currentUser.getUid()).child("orders").child(key).setValue(order);
+            //Storing in users-> orders referens too
             databaseReference.child("orders").child(key).setValue(order);
         }
     }
@@ -127,7 +137,9 @@ public class MakeOrderActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            //if toolbar arrow button back clicked
             case android.R.id.home:
+                //finish this activity
                 finish();
                 return true;
             default:

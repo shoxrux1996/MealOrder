@@ -62,13 +62,16 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_menu_create);
 
         ButterKnife.bind(this);
-
+        //and set Toolbar to Action Bar
         setSupportActionBar(toolbar);
+        //Set arrow back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //Set title of toolbar
         toolbar.setTitle("Create Order");
 
         progressDialog = new ProgressDialog(this);
+        //Set click listener and perform new
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,13 +80,15 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
                 startActivityForResult(photoPickerIntent, PICKER_CODE);
             }
         });
-
+        //Save new menu to database
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Validate all inputs
                 if(validateInputs()){
                     progressDialog.setMessage("Creating menu...");
                     progressDialog.show();
+                    //Function to store menu to Firebase with Image
                     uploadPhotoAndStore();
                 }else{
                     Toast.makeText(AdminMenuCreateActivity.this, "All input fields are required", Toast.LENGTH_SHORT).show();
@@ -91,6 +96,8 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
             }
         });
     }
+
+    //Validation of all inputs
     public boolean validateInputs(){
         if(titleView.getText().toString().isEmpty() || descriptionView.getText().toString().isEmpty() ||
                 ingredientsView.getText().toString().isEmpty() || priceView.getText().toString().isEmpty()){
@@ -98,6 +105,7 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
         }
         return true;
     }
+    //Uploading selected Photo to Firebase Storage and calling writeMenuToDatabase to store the menu
     public void uploadPhotoAndStore(){
         //If photo of the menu picked up successfully
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -121,18 +129,24 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Uri> task) {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
+                        //Call the function to store new Menu with key and image
                         writeMenuToDatabase(key, downloadUri.toString());
                     }else{
+                        //Call the function to store new Menu with key and without image
                         writeMenuToDatabase(key, null);
                     }
                 }
             });
         }else{
+            //Call the function to store new Menu with key and without image
             writeMenuToDatabase(key,null);
         }
     }
+
+    //Storing new Menu to Firebase Database with key which retrieved from Push in uploadPhotoAndStore function
     public void writeMenuToDatabase(String key, String imageURL){
         Menu menu = new Menu();
+        //Set Menu object
         menu.setTitle(titleView.getText().toString());
         menu.setDescription(descriptionView.getText().toString());
         menu.setPrice(Double.parseDouble(priceView.getText().toString()));
@@ -140,7 +154,10 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
         if(imageURL != null){
             menu.setImageURL(imageURL);
         }
+
+        //Get Firebase initial reference
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        //Store
         databaseReference.child("menus").child(key).setValue(menu);
 
         //hide the process dialog
@@ -153,15 +170,19 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //If request Image Picker
         if(requestCode == PICKER_CODE){
+            //And result is success and data not null
             if(resultCode == Activity.RESULT_OK){
                 if(data != null){
                     progressDialog.setMessage("Uploading image...");
                     progressDialog.show();
+                    //get data from request
                     selectedImage = data.getData();
                     try {
                         final InputStream inputStream = getContentResolver().openInputStream(selectedImage);
                         final Bitmap selectedImageBitmap = BitmapFactory.decodeStream(inputStream);
+                        //set image to ImageView
                         imageView.setImageBitmap(selectedImageBitmap);
                         progressDialog.dismiss();
 
@@ -177,7 +198,9 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
+            //if toolbar arrow button back clicked
             case android.R.id.home:
+                //finish this activity
                 finish();
                 return true;
             default:

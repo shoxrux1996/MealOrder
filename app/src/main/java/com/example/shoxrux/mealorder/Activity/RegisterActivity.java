@@ -65,11 +65,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        //Firebase Storage reference to upload the file
         storageReference = FirebaseStorage.getInstance().getReference();
+        //Firebase Databasee reference to write or read data
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        //Progress Dialog for pop up information
         progressDialog = new ProgressDialog(this);
-
         ButterKnife.bind(this);
     }
 
@@ -77,6 +79,7 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
+    //After click event on imageView, we will create Picker Intent with Picker Code
     public void setImage(View view) {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
@@ -86,15 +89,20 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //If the request from Image Picker
         if (requestCode == PICKER_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
+            //And if data isn't null and  result was ok (image selected)
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                //Show Dialog with uploading message
                 progressDialog.setMessage("Uploading image...");
                 progressDialog.show();
+                //Get selected Image Uri
                 selectedImage = data.getData();
                 try {
+                    //Decoding the Uri to bitmap, in order to set it to imageView
                     final InputStream inputStream = getContentResolver().openInputStream(selectedImage);
                     final Bitmap selectedImageBitmap = BitmapFactory.decodeStream(inputStream);
+                    //Set image to ImageView
                     image.setImageBitmap(selectedImageBitmap);
                     progressDialog.dismiss();
 
@@ -108,8 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
     }
-
+    //Registration function
     public void register(View view) {
+        //Validating all inputs
         if(validate()){
             final FirebaseAuth myAuth = FirebaseAuth.getInstance();
             //Process dialog with input Registration
