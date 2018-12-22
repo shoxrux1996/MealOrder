@@ -68,7 +68,7 @@ public class AdminMenuCreateActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         //Set title of toolbar
-        toolbar.setTitle("Create Order");
+        toolbar.setTitle("Create Menu");
 
         progressDialog = new ProgressDialog(this);
         //Set click listener and perform new

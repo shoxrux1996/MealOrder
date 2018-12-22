@@ -21,7 +21,7 @@
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="Edit Menu">
+            app:title="Admin Order">
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
